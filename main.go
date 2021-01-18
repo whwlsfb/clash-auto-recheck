@@ -62,7 +62,11 @@ func main() {
 		req.Header.Add("Authorization", "Bearer "+config.Auth)
 	}
 	client := &http.Client{}
-	resp, _ := client.Do(req)
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("[-] Get proxies failed! check clash is running and config not error.")
+		os.Exit(-1)
+	}
 	body, _ := ioutil.ReadAll(resp.Body)
 	jsonContent := string(body)
 	providers, err := simplejson.NewJson([]byte(jsonContent))
