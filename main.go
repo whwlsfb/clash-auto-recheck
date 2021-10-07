@@ -34,13 +34,19 @@ func main() {
 		if strings.Contains(string(linuxVersion), "OpenWrt") {
 			fmt.Println("[+] Detect OpenWrt environment, try get openclash config.")
 
+			ipaddr := ExecCommand("uci get network.lan.ipaddr")
+			ipaddr = strings.Trim(ipaddr, "\n")
+			if ipaddr == "" {
+				fmt.Println("[-] Error:get ipaddr err.")
+				os.Exit(-1)
+			}
 			cnPort := ExecCommand("uci get openclash.config.cn_port")
 			cnPort = strings.Trim(cnPort, "\n")
 			if cnPort == "" {
 				fmt.Println("[-] Error:get cn_port err.")
 				os.Exit(-1)
 			}
-			config.ClashURL = "http://127.0.0.1:" + cnPort
+			config.ClashURL = "http://" + ipaddr + ":" + cnPort
 
 			dashPasswd := ExecCommand("uci get openclash.config.dashboard_password")
 			dashPasswd = strings.Trim(dashPasswd, "\n")
